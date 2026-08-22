@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum ApplicationStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum FeedbackRequestStatus {
+  PENDING
+  SENT
+  FAILED
+  COMPLETED
+}
+
+enum FeedbackType {
+  GENERAL
+  FEATURE_REQUEST
+  BUG
+  IMPROVEMENT
+}
+
+enum FeatureRequestStatus {
+  NEW
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+}
+
+/// One row per Shopify app integrated with the platform (WishKeeper, StockPing, CartPulse, ...).
+/// New apps are added as data here — never by changing platform code.
+model Application {
+  id        String            @id @default(cuid())
+  appId     String            @unique
+  name      String
+  logoUrl   String
+  brandColor String           @default("#111827")
+  status    ApplicationStatus @default(ACTIVE)
+
+  /// Non-secret lookup prefix for the API key (e.g. "kw_live_ab12"), stored in plaintext.
+  apiKeyPrefix String @unique
+  /// bcrypt hash of the full API key. The plaintext key is only ever shown once, at creation/regeneration time.
+  apiKeyHash   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  merchants        Merchant[]
+  feedbackRequests FeedbackRequest[]
+  feedback         Feedback[]
+  featureRequests  FeatureRequest[]
+
+  @@index([status])
+}
+
+/// A merchant/store belonging to one Application. The same shop can exist under multiple
+/// applications (e.g. a store that has both WishKeeper and StockPing installed).
+model Merchant {
+  id            String   @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  shopDomain String
+  name       String
+  email      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  feedbackRequests FeedbackRequest[]
+  feedback         Feedback[]
+  featureRequests  FeatureRequest[]
+
+  @@unique([applicationId, shopDomain])
+  @@index([applicationId])
+}
+
+/// Created every time a Shopify app asks the platform to email a merchant for feedback.
+/// Doubles as the email send log (status/resendMessageId/error) and as the unguessable
+/// token that gates the public feedback webpage.
+model FeedbackRequest {
+  id            String   @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  merchantId    String
+  merchant      Merchant    @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  token  String                 @unique
+  status FeedbackRequestStatus  @default(PENDING)
+
+  resendMessageId String?
+  error            String?
+
+  sentAt      DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  feedback Feedback[]
+
+  @@index([applicationId])
+  @@index([merchantId])
+}
+
+/// One submission from the public feedback webpage.
+model Feedback {
+  id            String   @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  merchantId    String
+  merchant      Merchant    @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  feedbackRequestId String?
+  feedbackRequest    FeedbackRequest? @relation(fields: [feedbackRequestId], references: [id], onDelete: SetNull)
+
+  rating  Int
+  comment String?      @db.Text
+  type    FeedbackType @default(GENERAL)
+
+  featureRequest FeatureRequest?
+
+  createdAt DateTime @default(now())
+
+  @@index([applicationId])
+  @@index([merchantId])
+  @@index([createdAt])
+}
+
+/// An "idea/suggestion" submitted alongside (or instead of) a rating. Kept separate from
+/// Feedback so it can carry its own lifecycle (status, vote count) for the future
+/// feature-voting / roadmap functionality without reshaping the Feedback table.
+model FeatureRequest {
+  id            String   @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  merchantId    String
+  merchant      Merchant    @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  feedbackId String?  @unique
+  feedback   Feedback? @relation(fields: [feedbackId], references: [id], onDelete: SetNull)
+
+  description String               @db.Text
+  status      FeatureRequestStatus @default(NEW)
+  votes       Int                  @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([applicationId])
+  @@index([status])
+}
+
+/// Admin dashboard user (Kaswebtech staff), authenticated via NextAuth credentials.
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+
+  createdAt DateTime @default(now())
+}

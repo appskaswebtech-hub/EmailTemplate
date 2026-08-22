@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tasklist //FI \"IMAGENAME eq mysqld.exe\")",
+      "Bash(curl -s -o /dev/null -w \"login page: %{http_code}\\\\n\" http://localhost:3000/admin/login)",
+      "Bash(curl -s -o /dev/null -w \"root: %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(\"/d/xamp-new/mysql/bin/mysql.exe\" -u root kaswebtech_feedback -e \"SELECT id, token, status, error FROM FeedbackRequest ORDER BY createdAt DESC LIMIT 1;\")",
+      "Bash(curl -s -o /dev/null -w 'feedback page: %{http_code}\\\\n' http://localhost:3000/feedback/sGwrWElZ9Sn69xTxpa2CLSX8WOiHa8QJ)",
+      "Bash(curl -s -X POST http://localhost:3000/api/v1/feedback -H 'Content-Type: application/json' -d '{\"token\":\"sGwrWElZ9Sn69xTxpa2CLSX8WOiHa8QJ\",\"rating\":5,\"comment\":\"Great app\",\"suggestion\":\"Add sharing to WhatsApp\",\"type\":\"GENERAL\"}')",
+      "Bash(/d/xamp-new/mysql/bin/mysql.exe -u root kaswebtech_feedback -e ' *)",
+      "Bash(curl -s -c /tmp/cj.txt http://localhost:3000/api/auth/csrf)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>console.log\\(JSON.parse\\(d\\).csrfToken\\)\\)\")",
+      "Bash(curl -s -b /tmp/cj.txt -c /tmp/cj.txt -X POST http://localhost:3000/api/auth/callback/credentials -H 'Content-Type: application/x-www-form-urlencoded' --data-urlencode email=admin@kaswebtech.com --data-urlencode password=change-me-now --data-urlencode csrfToken=__TRACKED_VAR__ --data-urlencode json=true -o /tmp/login_resp.txt -w 'login status: %{http_code}\\\\n')",
+      "Bash(curl -s -b /tmp/cj.txt http://localhost:3000/api/admin/stats)",
+      "Bash(curl -s -b /tmp/cj.txt -o /dev/null -w \"admin dashboard: %{http_code}\\\\n\" http://localhost:3000/admin)",
+      "Bash(curl -s -b /tmp/cj.txt -o /dev/null -w \"admin applications: %{http_code}\\\\n\" http://localhost:3000/admin/applications)",
+      "Bash(curl -s -b /tmp/cj.txt -o /dev/null -w \"admin feedback: %{http_code}\\\\n\" http://localhost:3000/admin/feedback)",
+      "Bash(curl -s -b /tmp/cj.txt http://localhost:3000/api/admin/applications)",
+      "Bash(taskkill //F //IM node.exe)"
+    ]
+  }
+}
