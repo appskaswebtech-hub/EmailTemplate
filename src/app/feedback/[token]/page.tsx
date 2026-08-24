@@ -5,13 +5,7 @@ import { FeedbackForm } from "@/components/FeedbackForm";
 
 export const dynamic = "force-dynamic";
 
-export default async function FeedbackPage({
-  params,
-  searchParams,
-}: {
-  params: { token: string };
-  searchParams: { rating?: string };
-}) {
+export default async function FeedbackPage({ params }: { params: { token: string } }) {
   const feedbackRequest = await prisma.feedbackRequest.findUnique({
     where: { token: params.token },
     include: {
@@ -27,10 +21,6 @@ export default async function FeedbackPage({
 
   const { application, merchant } = feedbackRequest;
   const existing = feedbackRequest.feedback[0];
-
-  const parsedRating = Number(searchParams.rating);
-  const linkRating =
-    Number.isInteger(parsedRating) && parsedRating >= 1 && parsedRating <= 5 ? parsedRating : 0;
 
   return (
     <main className="min-h-screen bg-surface px-4 py-12">
@@ -55,7 +45,6 @@ export default async function FeedbackPage({
           token={feedbackRequest.token}
           appName={application.name}
           appColor={application.brandColor}
-          initialRating={linkRating || existing?.rating || 0}
           initialComment={existing?.comment ?? ""}
           initialSuggestion={existing?.featureRequest?.description ?? ""}
           initialType={existing?.type ?? "GENERAL"}

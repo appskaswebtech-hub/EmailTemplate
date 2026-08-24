@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { StarRating } from "@/components/StarRating";
 
 const FEEDBACK_TYPES: { value: string; label: string }[] = [
   { value: "GENERAL", label: "General feedback" },
@@ -15,7 +14,6 @@ export function FeedbackForm({
   token,
   appName,
   appColor,
-  initialRating = 0,
   initialComment = "",
   initialSuggestion = "",
   initialType = "GENERAL",
@@ -23,13 +21,11 @@ export function FeedbackForm({
   token: string;
   appName: string;
   appColor: string;
-  initialRating?: number;
   initialComment?: string;
   initialSuggestion?: string;
   initialType?: string;
 }) {
   const router = useRouter();
-  const [rating, setRating] = useState(initialRating);
   const [comment, setComment] = useState(initialComment);
   const [suggestion, setSuggestion] = useState(initialSuggestion);
   const [type, setType] = useState(initialType);
@@ -38,17 +34,13 @@ export function FeedbackForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (rating === 0) {
-      setError("Please select a rating.");
-      return;
-    }
     setError(null);
     setSubmitting(true);
 
     const res = await fetch("/api/v1/feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, rating, comment, suggestion, type }),
+      body: JSON.stringify({ token, comment, suggestion, type }),
     });
 
     setSubmitting(false);
@@ -65,15 +57,8 @@ export function FeedbackForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-8">
       <div>
-        <h2 className="mb-4 text-center text-lg font-semibold text-ink">
-          How was your experience with {appName}?
-        </h2>
-        <StarRating value={rating} onChange={setRating} color={appColor} />
-      </div>
-
-      <div>
         <label htmlFor="comment" className="mb-2 block text-sm font-semibold text-ink">
-          Tell us more
+          How was your experience with {appName}?
         </label>
         <textarea
           id="comment"

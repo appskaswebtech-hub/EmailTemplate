@@ -17,7 +17,6 @@ export type CreateFeedbackRequestInput = z.infer<typeof createFeedbackRequestSch
 /** Body for POST /api/v1/feedback, submitted from the public feedback webpage. */
 export const submitFeedbackSchema = z.object({
   token: z.string().min(1),
-  rating: z.number().int().min(1).max(5),
   comment: z.string().max(5000).optional(),
   suggestion: z.string().max(5000).optional(),
   type: z.enum(["GENERAL", "FEATURE_REQUEST", "BUG", "IMPROVEMENT"]),

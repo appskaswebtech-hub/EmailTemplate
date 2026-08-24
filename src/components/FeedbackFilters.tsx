@@ -39,19 +39,6 @@ export function FeedbackFilters({
       </select>
 
       <select
-        defaultValue={searchParams.get("rating") ?? ""}
-        onChange={(e) => update("rating", e.target.value)}
-        className="rounded-lg border border-zinc-200 p-2 text-sm"
-      >
-        <option value="">All ratings</option>
-        {[5, 4, 3, 2, 1].map((r) => (
-          <option key={r} value={r}>
-            {r} star{r > 1 ? "s" : ""}
-          </option>
-        ))}
-      </select>
-
-      <select
         defaultValue={searchParams.get("type") ?? ""}
         onChange={(e) => update("type", e.target.value)}
         className="rounded-lg border border-zinc-200 p-2 text-sm"

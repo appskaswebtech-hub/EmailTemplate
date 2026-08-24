@@ -118,7 +118,7 @@ model Feedback {
   feedbackRequestId String?
   feedbackRequest    FeedbackRequest? @relation(fields: [feedbackRequestId], references: [id], onDelete: SetNull)
 
-  rating  Int
+  rating  Int?
   comment String?      @db.Text
   type    FeedbackType @default(GENERAL)
 

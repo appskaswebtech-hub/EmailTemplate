@@ -25,7 +25,7 @@ export async function getFeedbackStats() {
 
   return {
     totalFeedback,
-    averageRating: ratingAgg._avg.rating ?? 0,
+    averageRating: ratingAgg._avg.rating,
     byType: byType.map((row) => ({ type: row.type, count: row._count._all })),
     byRating: byRating.map((row) => ({ rating: row.rating, count: row._count._all })),
     byApplication: byApplication.map((row) => ({

@@ -27,16 +27,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid or expired feedback link" }, { status: 404 });
   }
 
-  // A prior visit may have already recorded a rating-only submission (e.g. a
-  // one-click star from the email) — update that record instead of creating a
-  // duplicate, so a merchant can rate first and add detail later.
+  // A merchant revisiting the same link updates their existing submission
+  // instead of creating a duplicate.
   const existing = feedbackRequest.feedback[0];
 
   const feedback = existing
     ? await prisma.feedback.update({
         where: { id: existing.id },
         data: {
-          rating: input.rating,
           comment: input.comment || null,
           type: input.type,
         },
@@ -46,7 +44,6 @@ export async function POST(request: Request) {
           applicationId: feedbackRequest.applicationId,
           merchantId: feedbackRequest.merchantId,
           feedbackRequestId: feedbackRequest.id,
-          rating: input.rating,
           comment: input.comment || null,
           type: input.type,
         },

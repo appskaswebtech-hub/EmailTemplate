@@ -34,7 +34,6 @@ export default async function FeedbackListPage({
             <tr>
               <th className="px-4 py-3">Application</th>
               <th className="px-4 py-3">Merchant</th>
-              <th className="px-4 py-3">Rating</th>
               <th className="px-4 py-3">Type</th>
               <th className="px-4 py-3">Comment</th>
               <th className="px-4 py-3">Date</th>
@@ -49,10 +48,6 @@ export default async function FeedbackListPage({
                   </Link>
                 </td>
                 <td className="px-4 py-3">{item.merchant.name}</td>
-                <td className="px-4 py-3" style={{ color: item.application.brandColor }}>
-                  {"★".repeat(item.rating)}
-                  {"☆".repeat(5 - item.rating)}
-                </td>
                 <td className="px-4 py-3">
                   <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs">
                     {item.type.replace("_", " ")}
@@ -68,7 +63,7 @@ export default async function FeedbackListPage({
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-zinc-500">
+                <td colSpan={5} className="px-4 py-8 text-center text-zinc-500">
                   No feedback matches these filters.
                 </td>
               </tr>

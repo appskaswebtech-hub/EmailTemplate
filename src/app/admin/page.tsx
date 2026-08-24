@@ -22,7 +22,10 @@ export default async function AdminDashboardPage() {
     <div className="flex flex-col gap-8">
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatCard label="Total feedback" value={stats.totalFeedback} />
-        <StatCard label="Average rating" value={stats.averageRating.toFixed(1)} />
+        <StatCard
+          label="Average rating"
+          value={stats.averageRating != null ? stats.averageRating.toFixed(1) : "—"}
+        />
         <StatCard label="Feature requests" value={typeCount("FEATURE_REQUEST")} />
         <StatCard label="Bug reports" value={typeCount("BUG")} />
       </div>
@@ -68,10 +71,12 @@ export default async function AdminDashboardPage() {
                   </p>
                   <p className="text-zinc-500">{item.comment || "No comment"}</p>
                 </div>
-                <span style={{ color: item.application.brandColor }} className="font-semibold">
-                  {"★".repeat(item.rating)}
-                  {"☆".repeat(5 - item.rating)}
-                </span>
+                {item.rating != null && (
+                  <span style={{ color: item.application.brandColor }} className="font-semibold">
+                    {"★".repeat(item.rating)}
+                    {"☆".repeat(5 - item.rating)}
+                  </span>
+                )}
               </Link>
             ))}
           </div>

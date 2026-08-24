@@ -37,14 +37,7 @@ export default async function FeedbackDetailPage({ params }: { params: { id: str
       </div>
 
       <div className="rounded-2xl bg-white p-6 shadow-card">
-        <div className="mb-4 flex items-center justify-between">
-          <span
-            className="text-2xl"
-            style={{ color: feedback.application.brandColor }}
-          >
-            {"★".repeat(feedback.rating)}
-            {"☆".repeat(5 - feedback.rating)}
-          </span>
+        <div className="mb-4 flex items-center justify-end">
           <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold">
             {feedback.type.replace("_", " ")}
           </span>
