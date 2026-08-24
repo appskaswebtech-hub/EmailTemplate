@@ -28,14 +28,13 @@ export async function sendFeedbackRequestEmail(
       appColor: params.appColor,
       merchantName: params.merchantName,
       feedbackUrl: params.feedbackUrl,
-      companyName: env.companyName,
     })
   );
 
   try {
     const transporter = getSmtpTransporter();
     const info = await transporter.sendMail({
-      from: env.emailFrom,
+      from: `"${params.appName} Team" <${env.smtpUser}>`,
       to: params.toEmail,
       subject: `Help us make ${params.appName} even better!`,
       html,

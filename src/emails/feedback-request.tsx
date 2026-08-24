@@ -18,7 +18,6 @@ export interface FeedbackRequestEmailProps {
   appColor: string;
   merchantName: string;
   feedbackUrl: string;
-  companyName: string;
 }
 
 /**
@@ -32,7 +31,6 @@ export default function FeedbackRequestEmail({
   appColor,
   merchantName,
   feedbackUrl,
-  companyName,
 }: FeedbackRequestEmailProps) {
   return (
     <Html>
@@ -54,7 +52,13 @@ export default function FeedbackRequestEmail({
                   <table role="presentation" width="100%" cellPadding={0} cellSpacing={0}>
                     <tbody>
                       <tr>
-                        <td style={{ ...styles.headerBand, backgroundColor: appColor }} />
+                        <td
+                          style={{
+                            ...styles.headerBand,
+                            backgroundColor: appColor,
+                            backgroundImage: `linear-gradient(135deg, ${appColor}, #18181b)`,
+                          }}
+                        />
                       </tr>
                     </tbody>
                   </table>
@@ -70,7 +74,7 @@ export default function FeedbackRequestEmail({
                   </table>
 
                   <div style={styles.cardBody}>
-                    <Text style={styles.brandName}>{companyName}</Text>
+                    <Text style={styles.brandName}>{appName}</Text>
 
                     <Text style={styles.heading}>
                       Help us make{" "}
@@ -110,8 +114,7 @@ export default function FeedbackRequestEmail({
                     </Column>
                   </Row>
 
-                  <Link href={feedbackUrl} style={styles.textBox}>
-                    <span style={styles.textBoxIcon}>&#128172;</span>
+                  <Link href={feedbackUrl} style={{ ...styles.textBox, borderLeft: `3px solid ${appColor}` }}>
                     <span style={styles.textBoxLabel}>Tell us more (optional)</span>
                     <br />
                     <span style={styles.textBoxPlaceholder}>Share your thoughts with us...</span>
@@ -137,11 +140,10 @@ export default function FeedbackRequestEmail({
                     </Column>
                   </Row>
 
-                  <Link href={feedbackUrl} style={{ ...styles.textBox, backgroundColor: "#f0fdf4" }}>
+                  <Link href={feedbackUrl} style={{ ...styles.textBox, borderLeft: `3px solid ${appColor}` }}>
                     <span style={styles.textBoxLabel}>
                       What features or improvements would you like to see?
                     </span>
-                    <span style={styles.textBoxIconRight}>&#9998;</span>
                   </Link>
 
                   {/* CTA */}
@@ -151,9 +153,13 @@ export default function FeedbackRequestEmail({
                         <td align="center">
                           <Link
                             href={feedbackUrl}
-                            style={{ ...styles.button, backgroundColor: appColor }}
+                            style={{
+                              ...styles.button,
+                              backgroundColor: appColor,
+                              backgroundImage: `linear-gradient(135deg, ${appColor}, #18181b)`,
+                            }}
                           >
-                            &#9993; Submit Feedback
+                            Submit Feedback
                           </Link>
                         </td>
                       </tr>
@@ -161,82 +167,15 @@ export default function FeedbackRequestEmail({
                   </table>
 
                   <Text style={styles.footerNote}>
-                    &#10084; It only takes 2 minutes and makes a big difference!
+                    It only takes 2 minutes and makes a big difference!
                   </Text>
 
-                  {/* 3-column footer strip */}
-                  <table role="presentation" width="100%" cellPadding={0} cellSpacing={0} style={styles.stripTable}>
-                    <tbody>
-                      <tr>
-                        <td style={styles.stripCell}>
-                          <div style={{ ...styles.stripIcon, backgroundColor: "#fee2e2" }}>&#10084;</div>
-                          <Text style={styles.stripHeading}>Love something?</Text>
-                          <Text style={styles.stripText}>
-                            Let us know what you like about {appName}.
-                          </Text>
-                        </td>
-                        <td style={styles.stripCell}>
-                          <div style={{ ...styles.stripIcon, backgroundColor: "#fef3c7" }}>&#128161;</div>
-                          <Text style={styles.stripHeading}>Have an idea?</Text>
-                          <Text style={styles.stripText}>
-                            Suggest features you&apos;d love to see in the app.
-                          </Text>
-                        </td>
-                        <td style={styles.stripCell}>
-                          <div style={{ ...styles.stripIcon, backgroundColor: "#dbeafe" }}>&#128027;</div>
-                          <Text style={styles.stripHeading}>Found an issue?</Text>
-                          <Text style={styles.stripText}>
-                            Report any problems so we can fix them quickly.
-                          </Text>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <Section style={styles.cardCopyrightDivider} />
+                  <Text style={styles.cardCopyright}>
+                    &copy; {new Date().getFullYear()} {appName}. All rights reserved.
+                  </Text>
                   </div>
                 </Section>
-
-                {/* Outer footer */}
-                <table role="presentation" width="100%" cellPadding={0} cellSpacing={0} style={styles.outerFooter}>
-                  <tbody>
-                    <tr>
-                      <td style={{ width: "50%", verticalAlign: "top" }}>
-                        <table role="presentation" cellPadding={0} cellSpacing={0}>
-                          <tbody>
-                            <tr>
-                              <td style={styles.footerBrandBadge}>
-                                <Img src={appLogo} width="16" height="16" alt="" style={styles.brandBadgeImg} />
-                              </td>
-                              <td style={styles.footerBrandName}>{companyName}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        <Text style={styles.footerSmall}>
-                          Built with &#10084; for amazing merchants like you.
-                        </Text>
-                        <Text style={styles.footerSmall}>
-                          &copy; {new Date().getFullYear()} {companyName}. All rights reserved.
-                        </Text>
-                      </td>
-                      <td style={{ width: "50%", verticalAlign: "top" }} align="right">
-                        <Text style={{ ...styles.footerSmall, fontWeight: 700, color: "#3f3f46" }}>
-                          Need help?
-                        </Text>
-                        <Text style={styles.footerSmall}>We&apos;re always here for you.</Text>
-                        <table role="presentation" cellPadding={0} cellSpacing={0} style={{ marginTop: "8px", marginLeft: "auto" }}>
-                          <tbody>
-                            <tr>
-                              {["f", "\u{1D54F}", "in", "✉"].map((glyph) => (
-                                <td key={glyph} style={styles.socialIcon}>
-                                  {glyph}
-                                </td>
-                              ))}
-                            </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
               </td>
             </tr>
           </tbody>
@@ -252,7 +191,6 @@ FeedbackRequestEmail.PreviewProps = {
   appColor: "#6366f1",
   merchantName: "Adom",
   feedbackUrl: "https://feedback.kaswebtech.com/feedback/example-token",
-  companyName: "Kaswebtech",
 } satisfies FeedbackRequestEmailProps;
 
 const styles: Record<string, React.CSSProperties> = {
@@ -356,17 +294,12 @@ const styles: Record<string, React.CSSProperties> = {
   textBox: {
     display: "block",
     border: "1px solid #ececef",
-    borderRadius: "12px",
-    padding: "14px 16px",
-    marginBottom: "8px",
+    borderRadius: "10px",
+    padding: "14px 18px",
+    marginBottom: "10px",
     textDecoration: "none",
     backgroundColor: "#fafafa",
   },
-  textBoxIcon: {
-    fontSize: "14px",
-    marginRight: "6px",
-  },
-  textBoxIconRight: { fontSize: "14px", float: "right" as const },
   textBoxLabel: {
     fontSize: "13px",
     fontWeight: 700,
@@ -382,78 +315,25 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "16px",
     fontWeight: 700,
     textDecoration: "none",
-    padding: "14px 40px",
-    borderRadius: "10px",
+    padding: "15px 48px",
+    borderRadius: "999px",
+    letterSpacing: "0.02em",
+    boxShadow: "0 8px 20px -6px rgba(24,24,27,0.35)",
   },
   footerNote: {
     fontSize: "13px",
     color: "#71717a",
     textAlign: "center" as const,
-    margin: "14px 0 24px",
+    margin: "16px 0 20px",
   },
-  stripTable: {
+  cardCopyrightDivider: {
     borderTop: "1px solid #f0f0f2",
-    paddingTop: "20px",
+    margin: "4px 0 16px",
   },
-  stripCell: {
-    width: "33.33%",
-    verticalAlign: "top" as const,
-    padding: "0 8px",
-    textAlign: "center" as const,
-  },
-  stripIcon: {
-    width: "34px",
-    height: "34px",
-    borderRadius: "50%",
-    margin: "0 auto 8px",
-    fontSize: "15px",
-    lineHeight: "34px",
-    textAlign: "center" as const,
-  },
-  stripHeading: {
-    fontSize: "12.5px",
-    fontWeight: 700,
-    color: "#27272a",
-    margin: "0 0 2px",
-  },
-  stripText: {
-    fontSize: "11.5px",
-    color: "#a1a1aa",
-    margin: 0,
-    lineHeight: 1.4,
-  },
-  outerFooter: { padding: "24px 20px 0" },
-  footerBrandBadge: {
-    width: "24px",
-    height: "24px",
-    borderRadius: "6px",
-    backgroundColor: "#e4e4e7",
-    textAlign: "center" as const,
-    verticalAlign: "middle" as const,
-  },
-  brandBadgeImg: { borderRadius: "6px", verticalAlign: "middle" as const },
-  footerBrandName: {
-    paddingLeft: "8px",
-    fontSize: "13px",
-    fontWeight: 700,
-    color: "#3f3f46",
-    verticalAlign: "middle" as const,
-  },
-  footerSmall: {
-    fontSize: "11.5px",
-    color: "#a1a1aa",
-    margin: "6px 0 0",
-  },
-  socialIcon: {
-    width: "26px",
-    height: "26px",
-    borderRadius: "50%",
-    backgroundColor: "#f4f4f6",
-    color: "#71717a",
+  cardCopyright: {
     fontSize: "11px",
-    fontWeight: 700,
+    color: "#a1a1aa",
     textAlign: "center" as const,
-    verticalAlign: "middle" as const,
-    lineHeight: "26px",
+    margin: 0,
   },
 };
