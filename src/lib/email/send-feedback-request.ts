@@ -10,7 +10,6 @@ export interface SendFeedbackRequestEmailParams {
   appColor: string;
   merchantName: string;
   feedbackUrl: string;
-  token: string;
 }
 
 export interface SendFeedbackRequestEmailResult {
@@ -29,7 +28,6 @@ export async function sendFeedbackRequestEmail(
       appColor: params.appColor,
       merchantName: params.merchantName,
       feedbackUrl: params.feedbackUrl,
-      quickRateUrl: `${env.appBaseUrl}/api/v1/feedback/quick?token=${params.token}`,
       companyName: env.companyName,
     })
   );

@@ -18,7 +18,6 @@ export interface FeedbackRequestEmailProps {
   appColor: string;
   merchantName: string;
   feedbackUrl: string;
-  quickRateUrl: string;
   companyName: string;
 }
 
@@ -33,11 +32,8 @@ export default function FeedbackRequestEmail({
   appColor,
   merchantName,
   feedbackUrl,
-  quickRateUrl,
   companyName,
 }: FeedbackRequestEmailProps) {
-  const ratingUrl = (rating: number) => `${quickRateUrl}&rating=${rating}`;
-
   return (
     <Html>
       <Head />
@@ -82,7 +78,7 @@ export default function FeedbackRequestEmail({
                       better!
                     </Text>
                     <Text style={styles.greeting}>
-                      Hey <span style={{ color: appColor }}>{merchantName}</span>,
+                      Dear <span style={{ color: appColor }}>{appName}</span> user,
                     </Text>
                     <Text style={styles.body1}>
                       Thank you for using <strong>{appName}</strong>. We&apos;d
@@ -256,8 +252,6 @@ FeedbackRequestEmail.PreviewProps = {
   appColor: "#6366f1",
   merchantName: "Adom",
   feedbackUrl: "https://feedback.kaswebtech.com/feedback/example-token",
-  quickRateUrl:
-    "https://feedback.kaswebtech.com/api/v1/feedback/quick?token=example-token",
   companyName: "Kaswebtech",
 } satisfies FeedbackRequestEmailProps;
 
@@ -358,29 +352,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#71717a",
     margin: "0 0 14px",
     lineHeight: 1.5,
-  },
-  ratingBox: {
-    border: "1px solid #ececef",
-    borderRadius: "12px",
-    padding: "16px",
-    marginBottom: "12px",
-  },
-  ratingBoxTitle: {
-    fontSize: "13px",
-    fontWeight: 700,
-    color: "#27272a",
-    textAlign: "center" as const,
-    margin: "0 0 10px",
-  },
-  starLink: {
-    fontSize: "28px",
-    color: "#fbbf24",
-    textDecoration: "none",
-  },
-  ratingBoxLabel: {
-    fontSize: "11px",
-    color: "#a1a1aa",
-    paddingTop: "6px",
   },
   textBox: {
     display: "block",

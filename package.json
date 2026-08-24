@@ -11,7 +11,8 @@
     "db:generate": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
-    "email:dev": "email dev --dir src/emails --port 3001"
+    "email:dev": "email dev --dir src/emails --port 3001",
+    "send-csv": "tsx scripts/send-csv.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -20,6 +21,8 @@
     "@prisma/client": "^5.20.0",
     "@react-email/components": "^0.0.25",
     "bcryptjs": "^2.4.3",
+    "csv-parse": "^5.5.6",
+    "dotenv": "^16.4.5",
     "next": "14.2.15",
     "next-auth": "^4.24.8",
     "nodemailer": "^7.0.7",

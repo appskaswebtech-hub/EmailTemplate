@@ -63,7 +63,6 @@ export async function POST(request: Request) {
     appColor: application.brandColor,
     merchantName: merchant.name,
     feedbackUrl,
-    token,
   });
 
   await prisma.feedbackRequest.update({
