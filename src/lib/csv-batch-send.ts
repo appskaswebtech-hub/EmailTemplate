@@ -1,7 +1,63 @@
 import { prisma } from "@/lib/prisma";
 import { generateFeedbackToken } from "@/lib/token";
 import { sendFeedbackRequestEmail } from "@/lib/email/send-feedback-request";
+import { generateApiKey, hashApiKey } from "@/lib/api-key";
 import { env } from "@/lib/env";
+import type { Application } from "@prisma/client";
+
+const AUTO_CREATE_COLORS = [
+  "#6366f1",
+  "#16a34a",
+  "#f97316",
+  "#2563eb",
+  "#7c3aed",
+  "#db2777",
+  "#0891b2",
+  "#ca8a04",
+];
+
+function slugify(name: string): string {
+  return (
+    name
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "app"
+  );
+}
+
+/**
+ * Creates a new Application on the fly for a CSV "App" value that doesn't
+ * match anything yet — same shape as manually creating one in /admin/applications
+ * (placeholder logo, rotating brand color, real API key), just automatic.
+ */
+async function findOrCreateApplication(appName: string): Promise<Application> {
+  const existing = await prisma.application.findFirst({ where: { name: { equals: appName } } });
+  if (existing) return existing;
+
+  const baseSlug = slugify(appName);
+  let appId = baseSlug;
+  let suffix = 1;
+  while (await prisma.application.findUnique({ where: { appId } })) {
+    appId = `${baseSlug}-${++suffix}`;
+  }
+
+  const brandColor = AUTO_CREATE_COLORS[Math.floor(Math.random() * AUTO_CREATE_COLORS.length)];
+  const initials = appName.slice(0, 2).toUpperCase() || "AP";
+  const { plaintextKey, prefix } = generateApiKey();
+  const apiKeyHash = await hashApiKey(plaintextKey);
+
+  return prisma.application.create({
+    data: {
+      appId,
+      name: appName,
+      logoUrl: `https://placehold.co/128x128/${brandColor.replace("#", "")}/ffffff.png?text=${initials}`,
+      brandColor,
+      apiKeyPrefix: prefix,
+      apiKeyHash,
+    },
+  });
+}
 
 export interface CsvMerchantRow {
   merchantName: string;
@@ -47,19 +103,20 @@ export async function sendCsvBatch(
       continue;
     }
 
-    const application = await prisma.application.findFirst({
-      where: { name: { equals: row.app } },
-    });
-
-    if (!application) {
+    if (!row.app.trim()) {
       results.push({
         merchantEmail: row.merchantEmail,
         app: row.app,
         status: "skipped",
-        detail: `No application named "${row.app}" found`,
+        detail: "Missing App column value",
       });
       continue;
     }
+
+    const wasExisting = await prisma.application.findFirst({
+      where: { name: { equals: row.app } },
+    });
+    const application = wasExisting ?? (await findOrCreateApplication(row.app));
 
     if (application.status !== "ACTIVE") {
       results.push({
@@ -115,14 +172,20 @@ export async function sendCsvBatch(
           : { status: "FAILED", error: sendResult.error },
       });
 
+      const autoCreatedNote = wasExisting ? "" : " (new application auto-created)";
       results.push(
         sendResult.ok
-          ? { merchantEmail: row.merchantEmail, app: row.app, status: "sent", detail: feedbackUrl }
+          ? {
+              merchantEmail: row.merchantEmail,
+              app: row.app,
+              status: "sent",
+              detail: `${feedbackUrl}${autoCreatedNote}`,
+            }
           : {
               merchantEmail: row.merchantEmail,
               app: row.app,
               status: "failed",
-              detail: sendResult.error ?? "Unknown error",
+              detail: `${sendResult.error ?? "Unknown error"}${autoCreatedNote}`,
             }
       );
     } catch (err) {
