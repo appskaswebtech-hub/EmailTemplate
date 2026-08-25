@@ -35,12 +35,12 @@ export default async function AdminDashboardPage() {
   return (
     <div className="flex flex-col gap-8">
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard label="Total feedback" value={stats.totalFeedback} icon="\u{1F4CB}" accentColor="#2a78d6" />
-        <StatCard label="Emails sent" value={stats.totalSent} icon="✉️" accentColor="#eb6834" />
+        <StatCard label="Total feedback" value={stats.totalFeedback} icon="📋" accentColor="#2a78d6" />
+        <StatCard label="Emails sent" value={stats.totalSent} icon="📧" accentColor="#eb6834" />
         <StatCard
           label="Response rate"
           value={stats.responseRate != null ? `${stats.responseRate.toFixed(0)}%` : "—"}
-          icon="\u{1F4C8}"
+          icon="📈"
           accentColor="#1baf7a"
         />
         <StatCard
