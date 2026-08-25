@@ -12,6 +12,20 @@ const TYPE_LABELS: Record<string, string> = {
   IMPROVEMENT: "Improvement suggestions",
 };
 
+const TYPE_COLORS: Record<string, string> = {
+  GENERAL: "#2a78d6",
+  FEATURE_REQUEST: "#4a3aa7",
+  BUG: "#e34948",
+  IMPROVEMENT: "#1baf7a",
+};
+
+const TYPE_ICONS: Record<string, string> = {
+  GENERAL: "\u{1F4AC}",
+  FEATURE_REQUEST: "\u{1F4A1}",
+  BUG: "\u{1F41B}",
+  IMPROVEMENT: "✨",
+};
+
 export default async function AdminDashboardPage() {
   const stats = await getFeedbackStats();
 
@@ -21,13 +35,20 @@ export default async function AdminDashboardPage() {
   return (
     <div className="flex flex-col gap-8">
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard label="Total feedback" value={stats.totalFeedback} />
+        <StatCard label="Total feedback" value={stats.totalFeedback} icon="\u{1F4CB}" accentColor="#2a78d6" />
+        <StatCard label="Emails sent" value={stats.totalSent} icon="✉️" accentColor="#eb6834" />
         <StatCard
-          label="Average rating"
-          value={stats.averageRating != null ? stats.averageRating.toFixed(1) : "—"}
+          label="Response rate"
+          value={stats.responseRate != null ? `${stats.responseRate.toFixed(0)}%` : "—"}
+          icon="\u{1F4C8}"
+          accentColor="#1baf7a"
         />
-        <StatCard label="Feature requests" value={typeCount("FEATURE_REQUEST")} />
-        <StatCard label="Bug reports" value={typeCount("BUG")} />
+        <StatCard
+          label="Feature requests"
+          value={typeCount("FEATURE_REQUEST")}
+          icon={TYPE_ICONS.FEATURE_REQUEST}
+          accentColor={TYPE_COLORS.FEATURE_REQUEST}
+        />
       </div>
 
       <div className="rounded-2xl bg-white p-6 shadow-card">
@@ -36,14 +57,19 @@ export default async function AdminDashboardPage() {
           data={stats.byApplication.map((row) => ({
             applicationName: row.applicationName,
             count: row.count,
-            brandColor: row.brandColor,
           }))}
         />
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
         {Object.entries(TYPE_LABELS).map(([type, label]) => (
-          <StatCard key={type} label={label} value={typeCount(type)} />
+          <StatCard
+            key={type}
+            label={label}
+            value={typeCount(type)}
+            icon={TYPE_ICONS[type]}
+            accentColor={TYPE_COLORS[type]}
+          />
         ))}
       </div>
 
@@ -71,12 +97,12 @@ export default async function AdminDashboardPage() {
                   </p>
                   <p className="text-zinc-500">{item.comment || "No comment"}</p>
                 </div>
-                {item.rating != null && (
-                  <span style={{ color: item.application.brandColor }} className="font-semibold">
-                    {"★".repeat(item.rating)}
-                    {"☆".repeat(5 - item.rating)}
-                  </span>
-                )}
+                <span
+                  className="rounded-full px-2 py-0.5 text-xs font-semibold"
+                  style={{ backgroundColor: `${TYPE_COLORS[item.type]}1a`, color: TYPE_COLORS[item.type] }}
+                >
+                  {item.type.replace("_", " ")}
+                </span>
               </Link>
             ))}
           </div>

@@ -1,9 +1,15 @@
 import { prisma } from "@/lib/prisma";
 
 export async function getFeedbackStats() {
-  const [totalFeedback, ratingAgg, byType, byApplication, recent, byRating] = await Promise.all([
+  const [
+    totalFeedback,
+    byType,
+    byApplication,
+    recent,
+    totalSent,
+    totalCompleted,
+  ] = await Promise.all([
     prisma.feedback.count(),
-    prisma.feedback.aggregate({ _avg: { rating: true } }),
     prisma.feedback.groupBy({ by: ["type"], _count: { _all: true } }),
     prisma.feedback.groupBy({ by: ["applicationId"], _count: { _all: true } }),
     prisma.feedback.findMany({
@@ -14,7 +20,8 @@ export async function getFeedbackStats() {
         merchant: { select: { name: true } },
       },
     }),
-    prisma.feedback.groupBy({ by: ["rating"], _count: { _all: true } }),
+    prisma.feedbackRequest.count({ where: { status: { in: ["SENT", "COMPLETED"] } } }),
+    prisma.feedbackRequest.count({ where: { status: "COMPLETED" } }),
   ]);
 
   const applications = await prisma.application.findMany({
@@ -25,9 +32,9 @@ export async function getFeedbackStats() {
 
   return {
     totalFeedback,
-    averageRating: ratingAgg._avg.rating,
+    totalSent,
+    responseRate: totalSent > 0 ? (totalCompleted / totalSent) * 100 : null,
     byType: byType.map((row) => ({ type: row.type, count: row._count._all })),
-    byRating: byRating.map((row) => ({ rating: row.rating, count: row._count._all })),
     byApplication: byApplication.map((row) => ({
       applicationId: row.applicationId,
       applicationName: appById.get(row.applicationId)?.name ?? "Unknown",
