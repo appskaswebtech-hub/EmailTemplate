@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
+import { DeleteButton } from "@/components/DeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -19,21 +20,28 @@ export default async function FeedbackDetailPage({ params }: { params: { id: str
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-4">
-        <Image
-          src={feedback.application.logoUrl}
-          alt={feedback.application.name}
-          width={48}
-          height={48}
-          className="rounded-full"
-        />
-        <div>
-          <h1 className="text-lg font-bold text-ink">{feedback.application.name}</h1>
-          <p className="text-sm text-zinc-500">
-            {feedback.merchant.name} &middot; {feedback.merchant.email} &middot;{" "}
-            {feedback.merchant.shopDomain}
-          </p>
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <Image
+            src={feedback.application.logoUrl}
+            alt={feedback.application.name}
+            width={48}
+            height={48}
+            className="rounded-full"
+          />
+          <div>
+            <h1 className="text-lg font-bold text-ink">{feedback.application.name}</h1>
+            <p className="text-sm text-zinc-500">
+              {feedback.merchant.name} &middot; {feedback.merchant.email} &middot;{" "}
+              {feedback.merchant.shopDomain}
+            </p>
+          </div>
         </div>
+        <DeleteButton
+          endpoint={`/api/admin/feedback/${feedback.id}`}
+          confirmMessage="Delete this feedback? This cannot be undone."
+          redirectTo="/admin/feedback"
+        />
       </div>
 
       <div className="rounded-2xl bg-white p-6 shadow-card">

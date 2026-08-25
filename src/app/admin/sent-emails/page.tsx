@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { DeleteButton } from "@/components/DeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -96,6 +97,7 @@ export default async function SentEmailsPage({
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Sent at</th>
               <th className="px-4 py-3">Error</th>
+              <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-100">
@@ -119,11 +121,18 @@ export default async function SentEmailsPage({
                   {item.sentAt ? new Date(item.sentAt).toLocaleString() : "—"}
                 </td>
                 <td className="max-w-xs truncate px-4 py-3 text-red-600">{item.error || "—"}</td>
+                <td className="px-4 py-3 text-right">
+                  <DeleteButton
+                    endpoint={`/api/admin/sent-emails/${item.id}`}
+                    confirmMessage={`Delete this sent-email record for ${item.merchant.email}? This cannot be undone.`}
+                    small
+                  />
+                </td>
               </tr>
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-zinc-500">
+                <td colSpan={7} className="px-4 py-8 text-center text-zinc-500">
                   No emails sent yet.
                 </td>
               </tr>

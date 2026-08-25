@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { feedbackFilterSchema } from "@/lib/validation/schemas";
 import { queryFeedback } from "@/lib/feedback-query";
 import { FeedbackFilters } from "@/components/FeedbackFilters";
+import { DeleteButton } from "@/components/DeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,7 @@ export default async function FeedbackListPage({
               <th className="px-4 py-3">Type</th>
               <th className="px-4 py-3">Comment</th>
               <th className="px-4 py-3">Date</th>
+              <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-100">
@@ -59,11 +61,18 @@ export default async function FeedbackListPage({
                 <td className="px-4 py-3 text-zinc-500">
                   {new Date(item.createdAt).toLocaleDateString()}
                 </td>
+                <td className="px-4 py-3 text-right">
+                  <DeleteButton
+                    endpoint={`/api/admin/feedback/${item.id}`}
+                    confirmMessage={`Delete this feedback from ${item.merchant.name}? This cannot be undone.`}
+                    small
+                  />
+                </td>
               </tr>
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-zinc-500">
+                <td colSpan={6} className="px-4 py-8 text-center text-zinc-500">
                   No feedback matches these filters.
                 </td>
               </tr>

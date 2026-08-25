@@ -19,3 +19,15 @@ export async function GET(_request: Request, { params }: { params: { id: string 
 
   return NextResponse.json({ feedback });
 }
+
+export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
+  const session = await requireAdminSession();
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const feedback = await prisma.feedback.findUnique({ where: { id: params.id } });
+  if (!feedback) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  await prisma.feedback.delete({ where: { id: params.id } });
+
+  return NextResponse.json({ ok: true });
+}
