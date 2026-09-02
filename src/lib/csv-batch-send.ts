@@ -64,6 +64,7 @@ export interface CsvMerchantRow {
   merchantEmail: string;
   shopDomain: string;
   app: string;
+  reviewUrl?: string;
 }
 
 export interface CsvSendResult {
@@ -152,6 +153,7 @@ export async function sendCsvBatch(
           merchantId: merchant.id,
           token,
           status: "PENDING",
+          reviewUrl: row.reviewUrl,
         },
       });
 
@@ -163,6 +165,7 @@ export async function sendCsvBatch(
         appColor: application.brandColor,
         merchantName: merchant.name,
         feedbackUrl,
+        reviewUrl: row.reviewUrl,
       });
 
       await prisma.feedbackRequest.update({

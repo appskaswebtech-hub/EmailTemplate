@@ -33,7 +33,12 @@ export default async function SentEmailsPage({
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
-      include: {
+      select: {
+        id: true,
+        status: true,
+        sentAt: true,
+        error: true,
+        reviewUrl: true,
         application: { select: { name: true, brandColor: true } },
         merchant: { select: { name: true, email: true, shopDomain: true } },
       },
@@ -97,6 +102,7 @@ export default async function SentEmailsPage({
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Sent at</th>
               <th className="px-4 py-3">Error</th>
+              <th className="px-4 py-3">Review link</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
@@ -121,6 +127,20 @@ export default async function SentEmailsPage({
                   {item.sentAt ? new Date(item.sentAt).toLocaleString() : "—"}
                 </td>
                 <td className="max-w-xs truncate px-4 py-3 text-red-600">{item.error || "—"}</td>
+                <td className="max-w-[160px] truncate px-4 py-3">
+                  {item.reviewUrl ? (
+                    <a
+                      href={item.reviewUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {item.reviewUrl}
+                    </a>
+                  ) : (
+                    <span className="text-zinc-400">—</span>
+                  )}
+                </td>
                 <td className="px-4 py-3 text-right">
                   <DeleteButton
                     endpoint={`/api/admin/sent-emails/${item.id}`}
@@ -132,7 +152,7 @@ export default async function SentEmailsPage({
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-zinc-500">
+                <td colSpan={8} className="px-4 py-8 text-center text-zinc-500">
                   No emails sent yet.
                 </td>
               </tr>

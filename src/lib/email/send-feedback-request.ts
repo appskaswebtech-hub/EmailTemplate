@@ -10,6 +10,7 @@ export interface SendFeedbackRequestEmailParams {
   appColor: string;
   merchantName: string;
   feedbackUrl: string;
+  reviewUrl?: string;
 }
 
 export interface SendFeedbackRequestEmailResult {
@@ -28,6 +29,7 @@ export async function sendFeedbackRequestEmail(
       appColor: params.appColor,
       merchantName: params.merchantName,
       feedbackUrl: params.feedbackUrl,
+      reviewUrl: params.reviewUrl,
     })
   );
 

@@ -18,6 +18,7 @@ export interface FeedbackRequestEmailProps {
   appColor: string;
   merchantName: string;
   feedbackUrl: string;
+  reviewUrl?: string;
 }
 
 /**
@@ -31,6 +32,7 @@ export default function FeedbackRequestEmail({
   appColor,
   merchantName,
   feedbackUrl,
+  reviewUrl,
 }: FeedbackRequestEmailProps) {
   return (
     <Html>
@@ -166,6 +168,23 @@ export default function FeedbackRequestEmail({
                     </tbody>
                   </table>
 
+                  {reviewUrl && (
+                    <table role="presentation" width="100%" cellPadding={0} cellSpacing={0} style={{ marginTop: "12px" }}>
+                      <tbody>
+                        <tr>
+                          <td align="center">
+                            <Link
+                              href={reviewUrl}
+                              style={{ ...styles.secondaryButton, color: appColor, borderColor: appColor }}
+                            >
+                              Leave a Review
+                            </Link>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  )}
+
                   <Text style={styles.footerNote}>
                     It only takes 2 minutes and makes a big difference!
                   </Text>
@@ -191,6 +210,7 @@ FeedbackRequestEmail.PreviewProps = {
   appColor: "#6366f1",
   merchantName: "Adom",
   feedbackUrl: "https://feedback.kaswebtech.com/feedback/example-token",
+  reviewUrl: "https://apps.shopify.com/wishkeeper#modal-show=WriteReviewModal",
 } satisfies FeedbackRequestEmailProps;
 
 const styles: Record<string, React.CSSProperties> = {
@@ -319,6 +339,16 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: "999px",
     letterSpacing: "0.02em",
     boxShadow: "0 8px 20px -6px rgba(24,24,27,0.35)",
+  },
+  secondaryButton: {
+    display: "inline-block",
+    fontSize: "14px",
+    fontWeight: 700,
+    textDecoration: "none",
+    padding: "13px 40px",
+    borderRadius: "999px",
+    border: "2px solid",
+    backgroundColor: "#ffffff",
   },
   footerNote: {
     fontSize: "13px",

@@ -10,6 +10,8 @@ export const createFeedbackRequestSchema = z.object({
   merchantName: z.string().min(1).max(200),
   merchantEmail: z.string().email(),
   shopDomain: z.string().min(1).max(200),
+  /** Optional link to the app's public review page, shown as a secondary CTA in the email. */
+  reviewUrl: z.string().url().optional(),
 });
 
 export type CreateFeedbackRequestInput = z.infer<typeof createFeedbackRequestSchema>;

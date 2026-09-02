@@ -6,7 +6,9 @@
  *
  * The CSV's "App" column picks which application (and therefore which API
  * key, branding, and merchant record) each row belongs to — see
- * scripts/app-keys.example.json for the mapping file format.
+ * scripts/app-keys.example.json for the mapping file format. An optional
+ * "Review Link" column, if present, adds a "Leave a Review" button to that
+ * row's email pointing at the app's public review page.
  *
  * Usage:
  *   npm run send-csv -- data/merchants.csv
@@ -23,6 +25,7 @@ interface MerchantRow {
   merchantEmail: string;
   shopDomain: string;
   app: string;
+  reviewUrl?: string;
 }
 
 function sleep(ms: number) {
@@ -52,6 +55,7 @@ function loadRows(filePath: string): MerchantRow[] {
       merchantEmail: row["Shop email"] ?? row["merchantEmail"] ?? "",
       shopDomain: row["Shop domain"] ?? row["shopDomain"] ?? "",
       app: row["App"] ?? row["app"] ?? "",
+      reviewUrl: row["Review Link"] || row["reviewUrl"] || undefined,
     }))
     .filter((row) => row.merchantEmail && row.shopDomain);
 }
@@ -81,6 +85,7 @@ async function sendOne(baseUrl: string, apiKey: string, row: MerchantRow) {
       merchantName: row.merchantName,
       merchantEmail: row.merchantEmail,
       shopDomain: row.shopDomain,
+      reviewUrl: row.reviewUrl,
     }),
   });
   const data = await res.json().catch(() => ({}));

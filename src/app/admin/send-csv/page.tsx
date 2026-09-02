@@ -72,8 +72,9 @@ export default function SendCsvPage() {
             className="w-full rounded-lg border border-zinc-200 p-2 text-sm"
           />
           <p className="mt-1 text-xs text-zinc-500">
-            Needs columns: Shop name, Shop email, Shop domain, App (the app name must match one
-            already created in Applications).
+            Needs columns: Shop name, Shop email, Shop domain, App (auto-creates the application
+            if it doesn&apos;t exist yet). Optional: Review Link — a URL to the app&apos;s public
+            review page, adds a &quot;Leave a Review&quot; button to that row&apos;s email.
           </p>
         </div>
 

@@ -51,6 +51,7 @@ export async function POST(request: Request) {
       merchantId: merchant.id,
       token,
       status: "PENDING",
+      reviewUrl: input.reviewUrl,
     },
   });
 
@@ -63,6 +64,7 @@ export async function POST(request: Request) {
     appColor: application.brandColor,
     merchantName: merchant.name,
     feedbackUrl,
+    reviewUrl: input.reviewUrl,
   });
 
   await prisma.feedbackRequest.update({

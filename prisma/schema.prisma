@@ -94,6 +94,10 @@ model FeedbackRequest {
   token  String                 @unique
   status FeedbackRequestStatus  @default(PENDING)
 
+  /// Optional per-send link to the app's public review page (e.g. its Shopify App
+  /// Store listing), supplied per CSV row — shown as a secondary CTA in the email.
+  reviewUrl String?
+
   resendMessageId String?
   error            String?
 

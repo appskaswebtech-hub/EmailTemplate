@@ -31,6 +31,7 @@ export async function POST(request: Request) {
     merchantEmail: row["Shop email"] ?? row["merchantEmail"] ?? "",
     shopDomain: row["Shop domain"] ?? row["shopDomain"] ?? "",
     app: row["App"] ?? row["app"] ?? "",
+    reviewUrl: row["Review Link"] || row["reviewUrl"] || undefined,
   }));
 
   if (rows.length === 0) {
