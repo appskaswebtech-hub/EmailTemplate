@@ -5,6 +5,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { createFeedbackRequestSchema } from "@/lib/validation/schemas";
 import { generateFeedbackToken } from "@/lib/token";
 import { sendFeedbackRequestEmail } from "@/lib/email/send-feedback-request";
+import { normalizeReviewUrl } from "@/lib/review-url";
 import { env } from "@/lib/env";
 
 export async function POST(request: Request) {
@@ -27,6 +28,7 @@ export async function POST(request: Request) {
     );
   }
   const input = parsed.data;
+  const reviewUrl = normalizeReviewUrl(input.reviewUrl);
 
   const merchant = await prisma.merchant.upsert({
     where: {
@@ -51,7 +53,7 @@ export async function POST(request: Request) {
       merchantId: merchant.id,
       token,
       status: "PENDING",
-      reviewUrl: input.reviewUrl,
+      reviewUrl,
     },
   });
 
@@ -64,7 +66,7 @@ export async function POST(request: Request) {
     appColor: application.brandColor,
     merchantName: merchant.name,
     feedbackUrl,
-    reviewUrl: input.reviewUrl,
+    reviewUrl,
   });
 
   await prisma.feedbackRequest.update({

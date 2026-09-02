@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { generateFeedbackToken } from "@/lib/token";
 import { sendFeedbackRequestEmail } from "@/lib/email/send-feedback-request";
+import { normalizeReviewUrl } from "@/lib/review-url";
 import { generateApiKey, hashApiKey } from "@/lib/api-key";
 import { env } from "@/lib/env";
 import type { Application } from "@prisma/client";
@@ -130,6 +131,7 @@ export async function sendCsvBatch(
     }
 
     try {
+      const reviewUrl = normalizeReviewUrl(row.reviewUrl);
       const merchant = await prisma.merchant.upsert({
         where: {
           applicationId_shopDomain: {
@@ -153,7 +155,7 @@ export async function sendCsvBatch(
           merchantId: merchant.id,
           token,
           status: "PENDING",
-          reviewUrl: row.reviewUrl,
+          reviewUrl,
         },
       });
 
@@ -165,7 +167,7 @@ export async function sendCsvBatch(
         appColor: application.brandColor,
         merchantName: merchant.name,
         feedbackUrl,
-        reviewUrl: row.reviewUrl,
+        reviewUrl,
       });
 
       await prisma.feedbackRequest.update({
