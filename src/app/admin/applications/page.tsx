@@ -14,7 +14,7 @@ export default async function ApplicationsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-bold text-ink">Applications</h1>
+        <h1 className="text-lg font-bold text-ink dark:text-white">Applications</h1>
         <CreateApplicationDialog />
       </div>
 
@@ -23,7 +23,7 @@ export default async function ApplicationsPage() {
           <Link
             key={app.id}
             href={`/admin/applications/${app.id}`}
-            className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow-card"
+            className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow-card dark:bg-zinc-950 dark:shadow-card-dark dark:ring-1 dark:ring-zinc-800"
           >
             <div className="flex items-center gap-3">
               <Image
@@ -34,8 +34,8 @@ export default async function ApplicationsPage() {
                 className="rounded-full"
               />
               <div>
-                <p className="font-semibold text-ink">{app.name}</p>
-                <p className="text-xs text-zinc-500">{app.appId}</p>
+                <p className="font-semibold text-ink dark:text-white">{app.name}</p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">{app.appId}</p>
               </div>
             </div>
             <div className="flex items-center justify-between text-sm">
@@ -48,13 +48,13 @@ export default async function ApplicationsPage() {
               >
                 {app.status}
               </span>
-              <span className="text-zinc-500">{app._count.feedback} responses</span>
+              <span className="text-zinc-500 dark:text-zinc-400">{app._count.feedback} responses</span>
             </div>
           </Link>
         ))}
 
         {applications.length === 0 && (
-          <p className="text-sm text-zinc-500">No applications yet. Create one to get started.</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">No applications yet. Create one to get started.</p>
         )}
       </div>
     </div>

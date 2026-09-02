@@ -35,8 +35,20 @@ export default async function AdminDashboardPage() {
   return (
     <div className="flex flex-col gap-8">
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard label="Total feedback" value={stats.totalFeedback} icon="📋" accentColor="#2a78d6" />
-        <StatCard label="Emails sent" value={stats.totalSent} icon="📧" accentColor="#eb6834" />
+        <StatCard
+          label="Total feedback"
+          value={stats.totalFeedback}
+          icon="📋"
+          accentColor="#2a78d6"
+          trend={stats.feedbackTrend}
+        />
+        <StatCard
+          label="Emails sent"
+          value={stats.totalSent}
+          icon="📧"
+          accentColor="#eb6834"
+          trend={stats.sentTrend}
+        />
         <StatCard
           label="Response rate"
           value={stats.responseRate != null ? `${stats.responseRate.toFixed(0)}%` : "—"}
@@ -51,8 +63,8 @@ export default async function AdminDashboardPage() {
         />
       </div>
 
-      <div className="rounded-2xl bg-white p-6 shadow-card">
-        <h2 className="mb-4 font-semibold text-ink">Feedback by application</h2>
+      <div className="rounded-2xl bg-white p-6 shadow-card dark:bg-zinc-950 dark:shadow-card-dark dark:ring-1 dark:ring-zinc-800">
+        <h2 className="mb-4 font-semibold text-ink dark:text-white">Feedback by application</h2>
         <FeedbackByAppChart
           data={stats.byApplication.map((row) => ({
             applicationName: row.applicationName,
@@ -73,29 +85,32 @@ export default async function AdminDashboardPage() {
         ))}
       </div>
 
-      <div className="rounded-2xl bg-white p-6 shadow-card">
+      <div className="rounded-2xl bg-white p-6 shadow-card dark:bg-zinc-950 dark:shadow-card-dark dark:ring-1 dark:ring-zinc-800">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-semibold text-ink">Recent feedback</h2>
-          <Link href="/admin/feedback" className="text-sm text-zinc-500 hover:text-ink">
+          <h2 className="font-semibold text-ink dark:text-white">Recent feedback</h2>
+          <Link
+            href="/admin/feedback"
+            className="text-sm text-zinc-500 hover:text-ink dark:text-zinc-400 dark:hover:text-gold"
+          >
             View all
           </Link>
         </div>
 
         {stats.recent.length === 0 ? (
-          <p className="text-sm text-zinc-500">No feedback yet.</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">No feedback yet.</p>
         ) : (
-          <div className="flex flex-col divide-y divide-zinc-100">
+          <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800">
             {stats.recent.map((item) => (
               <Link
                 key={item.id}
                 href={`/admin/feedback/${item.id}`}
-                className="flex items-center justify-between py-3 text-sm hover:bg-zinc-50"
+                className="flex items-center justify-between py-3 text-sm hover:bg-zinc-50 dark:hover:bg-white/5"
               >
                 <div>
-                  <p className="font-medium text-ink">
+                  <p className="font-medium text-ink dark:text-white">
                     {item.application.name} &middot; {item.merchant.name}
                   </p>
-                  <p className="text-zinc-500">{item.comment || "No comment"}</p>
+                  <p className="text-zinc-500 dark:text-zinc-400">{item.comment || "No comment"}</p>
                 </div>
                 <span
                   className="rounded-full px-2 py-0.5 text-xs font-semibold"

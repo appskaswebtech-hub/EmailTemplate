@@ -27,21 +27,21 @@ export default async function ApplicationDetailPage({ params }: { params: { id: 
           className="rounded-full"
         />
         <div>
-          <h1 className="text-lg font-bold text-ink">{application.name}</h1>
-          <p className="text-sm text-zinc-500">
+          <h1 className="text-lg font-bold text-ink dark:text-white">{application.name}</h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
             {application.appId} &middot; key prefix {application.apiKeyPrefix}
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard label="Feedback responses" value={application._count.feedback} />
-        <StatCard label="Merchants" value={application._count.merchants} />
-        <StatCard label="Feature requests" value={application._count.featureRequests} />
+        <StatCard label="Feedback responses" value={application._count.feedback} icon="💬" accentColor="#2a78d6" />
+        <StatCard label="Merchants" value={application._count.merchants} icon="🏬" accentColor="#eb6834" />
+        <StatCard label="Feature requests" value={application._count.featureRequests} icon="💡" accentColor="#4a3aa7" />
       </div>
 
-      <div className="rounded-2xl bg-white p-6 shadow-card">
-        <h2 className="mb-4 font-semibold text-ink">API key management</h2>
+      <div className="rounded-2xl bg-white p-6 shadow-card dark:bg-zinc-950 dark:shadow-card-dark dark:ring-1 dark:ring-zinc-800">
+        <h2 className="mb-4 font-semibold text-ink dark:text-white">API key management</h2>
         <ApplicationActions applicationId={application.id} status={application.status} />
       </div>
     </div>

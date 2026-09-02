@@ -24,11 +24,11 @@ export function FeedbackFilters({
   }
 
   return (
-    <div className="flex flex-wrap gap-3 rounded-2xl bg-white p-4 shadow-card">
+    <div className="flex flex-wrap gap-3 rounded-2xl bg-white p-4 shadow-card dark:bg-zinc-950 dark:shadow-card-dark dark:ring-1 dark:ring-zinc-800">
       <select
         defaultValue={searchParams.get("applicationId") ?? ""}
         onChange={(e) => update("applicationId", e.target.value)}
-        className="rounded-lg border border-zinc-200 p-2 text-sm"
+        className="rounded-lg border border-zinc-200 p-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
       >
         <option value="">All applications</option>
         {applications.map((app) => (
@@ -41,7 +41,7 @@ export function FeedbackFilters({
       <select
         defaultValue={searchParams.get("type") ?? ""}
         onChange={(e) => update("type", e.target.value)}
-        className="rounded-lg border border-zinc-200 p-2 text-sm"
+        className="rounded-lg border border-zinc-200 p-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
       >
         <option value="">All types</option>
         {TYPES.map((t) => (
@@ -57,7 +57,7 @@ export function FeedbackFilters({
         onChange={(e) =>
           update("from", e.target.value ? new Date(e.target.value).toISOString() : "")
         }
-        className="rounded-lg border border-zinc-200 p-2 text-sm"
+        className="rounded-lg border border-zinc-200 p-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
       />
       <input
         type="date"
@@ -65,7 +65,7 @@ export function FeedbackFilters({
         onChange={(e) =>
           update("to", e.target.value ? new Date(e.target.value).toISOString() : "")
         }
-        className="rounded-lg border border-zinc-200 p-2 text-sm"
+        className="rounded-lg border border-zinc-200 p-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
       />
     </div>
   );

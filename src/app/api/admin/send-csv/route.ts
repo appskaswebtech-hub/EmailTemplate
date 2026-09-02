@@ -1,9 +1,22 @@
 import { NextResponse } from "next/server";
 import { parse } from "csv-parse/sync";
+import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/require-admin-session";
 import { sendCsvBatch, type CsvMerchantRow } from "@/lib/csv-batch-send";
 
 export const maxDuration = 300;
+
+export async function GET() {
+  const session = await requireAdminSession();
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const logs = await prisma.csvBatchLog.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 20,
+  });
+
+  return NextResponse.json({ logs });
+}
 
 export async function POST(request: Request) {
   const session = await requireAdminSession();
@@ -39,12 +52,20 @@ export async function POST(request: Request) {
   }
 
   const results = await sendCsvBatch(rows, delayMs);
+  const sent = results.filter((r) => r.status === "sent").length;
+  const skipped = results.filter((r) => r.status === "skipped").length;
+  const failed = results.filter((r) => r.status === "failed").length;
 
-  return NextResponse.json({
-    total: rows.length,
-    sent: results.filter((r) => r.status === "sent").length,
-    skipped: results.filter((r) => r.status === "skipped").length,
-    failed: results.filter((r) => r.status === "failed").length,
-    results,
+  await prisma.csvBatchLog.create({
+    data: {
+      fileName: file.name,
+      totalRows: rows.length,
+      sentCount: sent,
+      skippedCount: skipped,
+      failedCount: failed,
+      uploadedBy: session.user?.email ?? session.user?.name ?? null,
+    },
   });
+
+  return NextResponse.json({ total: rows.length, sent, skipped, failed, results });
 }

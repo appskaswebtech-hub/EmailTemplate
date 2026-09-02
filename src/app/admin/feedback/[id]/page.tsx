@@ -30,8 +30,8 @@ export default async function FeedbackDetailPage({ params }: { params: { id: str
             className="rounded-full"
           />
           <div>
-            <h1 className="text-lg font-bold text-ink">{feedback.application.name}</h1>
-            <p className="text-sm text-zinc-500">
+            <h1 className="text-lg font-bold text-ink dark:text-white">{feedback.application.name}</h1>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
               {feedback.merchant.name} &middot; {feedback.merchant.email} &middot;{" "}
               {feedback.merchant.shopDomain}
             </p>
@@ -44,30 +44,30 @@ export default async function FeedbackDetailPage({ params }: { params: { id: str
         />
       </div>
 
-      <div className="rounded-2xl bg-white p-6 shadow-card">
+      <div className="rounded-2xl bg-white p-6 shadow-card dark:bg-zinc-950 dark:shadow-card-dark dark:ring-1 dark:ring-zinc-800">
         <div className="mb-4 flex items-center justify-end">
-          <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold">
+          <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold dark:bg-white/10 dark:text-zinc-300">
             {feedback.type.replace("_", " ")}
           </span>
         </div>
 
-        <p className="mb-1 text-sm font-semibold text-ink">Comment</p>
-        <p className="mb-4 text-sm text-zinc-600">{feedback.comment || "No comment provided."}</p>
+        <p className="mb-1 text-sm font-semibold text-ink dark:text-white">Comment</p>
+        <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-300">{feedback.comment || "No comment provided."}</p>
 
-        <p className="text-xs text-zinc-400">
+        <p className="text-xs text-zinc-400 dark:text-zinc-500">
           Submitted {new Date(feedback.createdAt).toLocaleString()}
         </p>
       </div>
 
       {feedback.featureRequest && (
-        <div className="rounded-2xl bg-white p-6 shadow-card">
+        <div className="rounded-2xl bg-white p-6 shadow-card dark:bg-zinc-950 dark:shadow-card-dark dark:ring-1 dark:ring-zinc-800">
           <div className="mb-2 flex items-center justify-between">
-            <p className="text-sm font-semibold text-ink">Feature suggestion</p>
-            <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">
+            <p className="text-sm font-semibold text-ink dark:text-white">Feature suggestion</p>
+            <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-300">
               {feedback.featureRequest.status.replace("_", " ")}
             </span>
           </div>
-          <p className="text-sm text-zinc-600">{feedback.featureRequest.description}</p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-300">{feedback.featureRequest.description}</p>
         </div>
       )}
     </div>

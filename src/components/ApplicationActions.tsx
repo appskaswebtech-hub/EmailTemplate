@@ -42,25 +42,25 @@ export function ApplicationActions({
         <button
           onClick={regenerateKey}
           disabled={loading}
-          className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-ink disabled:opacity-60"
+          className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-ink disabled:opacity-60 dark:border-zinc-700 dark:text-white dark:hover:bg-white/5"
         >
           Regenerate API key
         </button>
         <button
           onClick={toggleStatus}
           disabled={loading}
-          className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-ink disabled:opacity-60"
+          className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-ink disabled:opacity-60 dark:border-zinc-700 dark:text-white dark:hover:bg-white/5"
         >
           {status === "ACTIVE" ? "Deactivate" : "Activate"}
         </button>
       </div>
 
       {newKey && (
-        <div className="rounded-lg bg-zinc-100 p-3">
-          <p className="mb-1 text-xs text-zinc-500">
+        <div className="rounded-lg bg-zinc-100 p-3 dark:bg-white/5">
+          <p className="mb-1 text-xs text-zinc-500 dark:text-zinc-400">
             New API key — copy it now, it won&apos;t be shown again:
           </p>
-          <code className="break-all text-xs">{newKey}</code>
+          <code className="break-all text-xs dark:text-zinc-200">{newKey}</code>
         </div>
       )}
     </div>

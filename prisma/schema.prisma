@@ -168,3 +168,19 @@ model AdminUser {
 
   createdAt DateTime @default(now())
 }
+
+/// One row per CSV uploaded via /admin/send-csv — a record of the batch itself,
+/// separate from the individual FeedbackRequest rows it created.
+model CsvBatchLog {
+  id         String   @id @default(cuid())
+  fileName   String
+  totalRows  Int
+  sentCount  Int
+  skippedCount Int
+  failedCount  Int
+  uploadedBy String?
+
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
